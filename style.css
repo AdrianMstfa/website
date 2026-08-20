@@ -1,0 +1,444 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #0a0510;
+  overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  position: relative;
+}
+
+/* ---------- Grid lantai perspektif ---------- */
+.grid-floor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background-image:
+    linear-gradient(rgba(255, 25, 130, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 25, 130, 0.35) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(400px) rotateX(65deg);
+  transform-origin: bottom;
+  opacity: 0.5;
+  z-index: 0;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+}
+
+/* ---------- Scanline overlay (efek VHS) ---------- */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 1px,
+    transparent 2px,
+    transparent 3px
+  );
+  z-index: 20;
+  mix-blend-mode: overlay;
+}
+
+/* Sedikit vignette + tint magenta/cyan */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+  pointer-events: none;
+}
+
+/* ---------- Scene ---------- */
+.scene {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+.title {
+  font-family: 'Russo One', sans-serif;
+  font-size: 54px;
+  letter-spacing: 10px;
+  color: #ff2e92;
+  text-shadow:
+    0 0 8px rgba(255, 46, 146, 0.8),
+    0 0 22px rgba(255, 46, 146, 0.5),
+    3px 0 0 rgba(0, 240, 255, 0.5),
+    -3px 0 0 rgba(255, 46, 0, 0.35);
+  margin-bottom: 60px;
+  animation: flicker 4s infinite;
+}
+
+@keyframes flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.6; }
+  94% { opacity: 1; }
+  95% { opacity: 0.4; }
+  96% { opacity: 1; }
+}
+
+/* ---------- Telepon ---------- */
+.phone-wrapper {
+  position: relative;
+  width: 240px;
+  height: 340px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.phone {
+  width: 170px;
+  height: 340px;
+  position: relative;
+  z-index: 2;
+  transition: filter 0.35s ease;
+  overflow: visible;
+}
+
+/* Gaya line-art: hanya garis luar yang terlihat, isi transparan */
+.phone-part {
+  fill: none;
+  stroke: #3a2a42;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  transition: stroke 0.35s ease, fill 0.35s ease;
+}
+
+.body {
+  fill: #14101a;
+}
+
+.body-highlight {
+  stroke-width: 1.2;
+  stroke: #2e2136;
+  opacity: 0.6;
+}
+
+.antenna {
+  stroke-width: 2.6;
+}
+
+.antenna-base {
+  fill: #14101a;
+}
+
+.grille-line {
+  stroke-width: 1.6;
+}
+
+.screen {
+  fill: #0a0510;
+  stroke-width: 2;
+}
+
+.screen-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  fill: #3a2a42;
+  stroke: none;
+  letter-spacing: 1px;
+  transition: fill 0.35s ease;
+}
+
+.key {
+  fill: #191320;
+  stroke-width: 1.8;
+}
+
+.call-key {
+  fill: #3a1420;
+  stroke: #8a2a3a;
+  stroke-width: 1.8;
+}
+
+.panel-line {
+  fill: #191320;
+  stroke-width: 1.4;
+}
+
+.screw {
+  fill: #0a0510;
+  stroke-width: 1.2;
+}
+
+.base-shadow {
+  fill: rgba(0,0,0,0.4);
+  stroke: none;
+}
+
+.shadow {
+  position: absolute;
+  bottom: 4px;
+  width: 130px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* --- STATE: MENYALA (hover / klik) — hanya telepon itu sendiri yang menyala --- */
+.phone-wrapper.lit .phone-part {
+  stroke: #ff2e92;
+}
+
+.phone-wrapper.lit .body,
+.phone-wrapper.lit .antenna-base,
+.phone-wrapper.lit .key,
+.phone-wrapper.lit .panel-line {
+  fill: #2a0f22;
+}
+
+.phone-wrapper.lit .call-key {
+  fill: #4a0f22;
+  stroke: #ff2e92;
+}
+
+.phone-wrapper.lit .body-highlight {
+  stroke: #ff2e92;
+  opacity: 0.9;
+}
+
+.phone-wrapper.lit .screen {
+  stroke: #ff2e92;
+}
+
+.phone-wrapper.lit .screen-text {
+  fill: #ff2e92;
+}
+
+.phone-wrapper.lit .screw {
+  stroke: #ff2e92;
+}
+
+.phone-wrapper.lit .phone {
+  filter:
+    drop-shadow(0 0 10px rgba(255, 46, 146, 0.9))
+    drop-shadow(0 0 26px rgba(0, 240, 255, 0.45));
+}
+
+.hint {
+  margin-top: 36px;
+  color: #4a2e52;
+  font-size: 13px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+}
+
+.phone-wrapper.lit ~ .hint {
+  color: #ff8cc6;
+  text-shadow: 0 0 10px rgba(255, 46, 146, 0.6);
+}
+
+/* ---------- Modal dialog ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 2, 8, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-box {
+  text-align: center;
+  border: 2px solid #ff2e92;
+  padding: 40px 50px;
+  background: #0e0713;
+  box-shadow:
+    0 0 20px rgba(255, 46, 146, 0.5),
+    0 0 60px rgba(0, 240, 255, 0.15);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-box {
+  transform: scale(1);
+}
+
+.modal-line {
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
+  margin-bottom: 14px;
+  animation: blink-line 1.4s infinite;
+}
+
+@keyframes blink-line {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.modal-question {
+  font-family: 'Russo One', sans-serif;
+  font-size: 42px;
+  letter-spacing: 6px;
+  color: #ff2e92;
+  text-shadow:
+    0 0 8px rgba(255, 46, 146, 0.8),
+    2px 0 0 rgba(0, 240, 255, 0.5),
+    -2px 0 0 rgba(255, 46, 0, 0.35);
+  margin-bottom: 32px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.modal-btn {
+  font-family: 'Russo One', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  padding: 14px 30px;
+  background: transparent;
+  border: 2px solid;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-btn.accept {
+  color: #00f0ff;
+  border-color: #00f0ff;
+}
+
+.modal-btn.accept:hover {
+  background: #00f0ff;
+  color: #0e0713;
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.7);
+}
+
+.modal-btn.reject {
+  color: #ff2e2e;
+  border-color: #ff2e2e;
+}
+
+.modal-btn.reject:hover {
+  background: #ff2e2e;
+  color: #0e0713;
+  box-shadow: 0 0 18px rgba(255, 46, 46, 0.7);
+}
+
+/* ---------- Halaman hasil (terima / tolak) ---------- */
+.result-scene {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+  text-align: center;
+}
+
+.result-text {
+  font-family: 'Russo One', sans-serif;
+  font-size: 64px;
+  line-height: 1.25;
+  letter-spacing: 6px;
+  margin-bottom: 50px;
+  animation: flicker 4s infinite;
+}
+
+.accept-text {
+  color: #00f0ff;
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.9),
+    0 0 30px rgba(0, 240, 255, 0.5),
+    3px 0 0 rgba(255, 46, 146, 0.5),
+    -3px 0 0 rgba(255, 46, 0, 0.3);
+}
+
+.reject-text {
+  color: #ff2e2e;
+  text-shadow:
+    0 0 10px rgba(255, 46, 46, 0.9),
+    0 0 34px rgba(255, 46, 46, 0.55),
+    3px 0 0 rgba(255, 46, 146, 0.4),
+    -3px 0 0 rgba(0, 240, 255, 0.3);
+  animation: flicker 4s infinite, shake 6s infinite;
+}
+
+@keyframes shake {
+  0%, 96%, 100% { transform: translate(0, 0); }
+  97% { transform: translate(-2px, 1px); }
+  98% { transform: translate(2px, -1px); }
+  99% { transform: translate(-1px, 0); }
+}
+
+.red-floor {
+  background-image:
+    linear-gradient(rgba(255, 30, 30, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 30, 30, 0.35) 1px, transparent 1px);
+}
+
+.back-link {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #7a5a80;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+
+.back-link:hover {
+  color: #ff8cc6;
+  text-shadow: 0 0 8px rgba(255, 46, 146, 0.6);
+}
+
+/* ---------- Tombol mute ---------- */
+.mute-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #ff2e92;
+  background: #150c1c;
+  color: #ff2e92;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, box-shadow 0.2s ease;
+  opacity: 0.6;
+  z-index: 30;
+  box-shadow: 0 0 0px rgba(255, 46, 146, 0);
+}
+
+.mute-btn:hover {
+  opacity: 1;
+  box-shadow: 0 0 14px rgba(255, 46, 146, 0.6);
+}

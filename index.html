@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEEP BEEP</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="scanlines"></div>
+  <div class="grid-floor"></div>
+
+  <main class="scene">
+
+    <h1 class="title">......</h1>
+
+    <div class="phone-wrapper" id="phoneWrapper">
+
+      <svg class="phone" id="phoneSvg" viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ===== Alas bayangan ===== -->
+        <ellipse cx="100" cy="322" rx="60" ry="10" class="phone-part base-shadow" />
+
+        <!-- ===== Antena ===== -->
+        <line x1="72" y1="10" x2="58" y2="-42" class="phone-part antenna" stroke-linecap="round" />
+        <circle cx="72" cy="10" r="4" class="phone-part antenna-base" />
+
+        <!-- ===== Badan utama (brick body) ===== -->
+        <path d="M38 20
+                 Q38 10 50 10
+                 L150 10
+                 Q162 10 162 22
+                 L164 300
+                 Q164 314 150 316
+                 L52 316
+                 Q40 314 39 300 Z"
+              class="phone-part body" />
+        <!-- Garis tepi highlight kiri -->
+        <path d="M46 24 L44 298" class="phone-part body-highlight" fill="none" />
+
+        <!-- ===== Grille speaker (lubang-lubang atas) ===== -->
+        <g class="speaker-grille">
+          <line x1="70" y1="42" x2="130" y2="42" class="phone-part grille-line" />
+          <line x1="70" y1="48" x2="130" y2="48" class="phone-part grille-line" />
+          <line x1="70" y1="54" x2="130" y2="54" class="phone-part grille-line" />
+          <line x1="70" y1="60" x2="130" y2="60" class="phone-part grille-line" />
+        </g>
+
+        <!-- ===== Layar kecil (display) ===== -->
+        <rect x="66" y="78" width="68" height="24" rx="3" class="phone-part screen" />
+        <text x="100" y="95" text-anchor="middle" class="phone-part screen-text">88:88</text>
+
+        <!-- ===== Keypad 3x4 ===== -->
+        <g class="keypad">
+          <!-- baris 1: 1 2 3 -->
+          <rect x="58" y="118" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="88" y="118" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="118" y="118" width="24" height="18" rx="3" class="phone-part key" />
+          <!-- baris 2: 4 5 6 -->
+          <rect x="58" y="142" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="88" y="142" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="118" y="142" width="24" height="18" rx="3" class="phone-part key" />
+          <!-- baris 3: 7 8 9 -->
+          <rect x="58" y="166" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="88" y="166" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="118" y="166" width="24" height="18" rx="3" class="phone-part key" />
+          <!-- baris 4: * 0 # -->
+          <rect x="58" y="190" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="88" y="190" width="24" height="18" rx="3" class="phone-part key" />
+          <rect x="118" y="190" width="24" height="18" rx="3" class="phone-part key" />
+        </g>
+
+        <!-- ===== Tombol Call (merah) & End ===== -->
+        <rect x="58" y="216" width="38" height="18" rx="4" class="phone-part call-key" />
+        <rect x="104" y="216" width="38" height="18" rx="4" class="phone-part key" />
+
+        <!-- ===== Grille bawah (mic) ===== -->
+        <g class="mic-grille">
+          <line x1="80" y1="252" x2="120" y2="252" class="phone-part grille-line" />
+          <line x1="80" y1="258" x2="120" y2="258" class="phone-part grille-line" />
+          <line x1="80" y1="264" x2="120" y2="264" class="phone-part grille-line" />
+        </g>
+
+        <!-- ===== Detail sekrup / panel bawah ===== -->
+        <rect x="80" y="286" width="40" height="6" rx="2" class="phone-part panel-line" />
+        <circle cx="60" cy="304" r="2.4" class="phone-part screw" />
+        <circle cx="140" cy="304" r="2.4" class="phone-part screw" />
+
+      </svg>
+
+      <div class="shadow"></div>
+
+    </div>
+
+    <p class="hint">TAP THE PHONE BIC</p>
+  </main>
+
+  <!-- Modal dialog gaya Hotline Miami -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <p class="modal-line">TELEPON BERDERING...</p>
+      <h2 class="modal-question">ANGKAT?</h2>
+      <div class="modal-buttons">
+        <button id="acceptBtn" class="modal-btn accept">TERIMA</button>
+        <button id="rejectBtn" class="modal-btn reject">TOLAK</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgm" src="bgm.mpeg" loop preload="auto"></audio>
+  <button id="muteBtn" class="mute-btn" aria-label="Mute / Unmute">🔊</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
